@@ -1,9 +1,9 @@
-classdef FortranIO
+classdef FortranIO < handle
     %FortranIO Read and write Fortran unformatted files
     %   Operate on records.
     
     properties
-        fileID, wordsize, position
+        fileID, wordsize
     end
     
     methods
@@ -21,7 +21,6 @@ classdef FortranIO
             % Store the data
             instance.fileID = fopen(ip.Results.FileName);
             instance.wordsize = ip.Results.WordSize;
-            instance.position = 0;
         end
         % Raw read function
         function record = readRecord( self )
