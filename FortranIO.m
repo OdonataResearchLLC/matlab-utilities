@@ -42,5 +42,20 @@ classdef FortranIO < handle
                     endlen, reclen);
             end
         end
+        % Buffer the entire file
+        function buffer = readFile( self )
+            %readFile Read all records into a buffer
+            
+            fseek(self.fileID,-1,'eof');
+            eofpos = ftell(self.fileID);
+            frewind(self.fileID);
+            
+            count = 1;
+            buffer = cell(16,1);
+            while ftell(self.fileID) < eofpos;
+                buffer{count} = self.readRecord;
+                count = count + 1;
+            end
+        end
     end
 end
