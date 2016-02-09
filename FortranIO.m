@@ -15,11 +15,10 @@ classdef FortranIO < handle
             end
             % Input validation
             ip = inputParser;
-            ip.addParameter('FileName', '');
             ip.addParameter('WordSize', 'uint', @validWordSize);
             ip.parse(varargin{:});
             % Store the data
-            instance.fileID = fopen(ip.Results.FileName);
+            instance.fileID = 0;
             instance.wordsize = ip.Results.WordSize;
         end
         % Raw read function
@@ -43,18 +42,37 @@ classdef FortranIO < handle
             end
         end
         % Buffer the entire file
-        function buffer = readFile( self )
+        function records = readFile( self, FortranBinaryFile )
             %readFile Read all records into a buffer
             
-            fseek(self.fileID,-1,'eof');
-            eofpos = ftell(self.fileID);
-            frewind(self.fileID);
+            % Open the file
+            self.fileID = fopen(FortranBinaryFile, 'r');
+            if self.fileID < 0
+                error('Unable to open %s.', FortranBinaryFile);
+            end
             
-            count = 1;
-            buffer = cell(16,1);
-            while ftell(self.fileID) < eofpos;
-                buffer{count} = self.readRecord;
-                count = count + 1;
+            try
+                % Find the end-of-file
+                fseek(self.fileID,-1,'eof');
+                eofpos = ftell(self.fileID);
+                frewind(self.fileID);
+                
+                % Read the records
+                count = 1;
+                buffer = cell(8192,1);
+                while ftell(self.fileID) < eofpos;
+                    buffer{count} = self.readRecord;
+                    count = count + 1;
+                end
+                
+                % Close the file
+                self.fileID = fclose(self.fileID);
+                
+                % Return the records
+                records = buffer(1:count-1);
+            catch ERR
+                self.fileID = fclose(self.fileID);
+                rethrow(ERR)
             end
         end
     end
