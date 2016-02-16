@@ -31,8 +31,12 @@ classdef dataParser < handle
                     lineNumber, self.lastline)
             end
         end
-        function rewind( self )
-            self.line = 0;
+        function rewind( self, count )
+            if nargin == 1
+                self.line = 0;
+            else
+                self.line = self.line - count;
+            end
         end
         function torf = eod( self, count )
             if nargin == 1
