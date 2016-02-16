@@ -12,6 +12,10 @@ elseif fileName(1) == '*'
 end
 
 % Read the file
-fileC = strsplit(fileread(fileName), '\n');
+if fname ~= 0
+    fileC = strsplit(fileread(fileName), '\n');
+else
+    fileC = cell(0);
+end
 
 end
