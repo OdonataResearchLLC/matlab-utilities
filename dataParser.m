@@ -27,6 +27,7 @@ classdef dataParser < handle
                 self.line = lineNumber;
                 theLine = self.dataCell{lineNumber};
             else
+                % FIXME: Create a proper exception
                 error('Next line, %i, exceeds lastline, %i.', ...
                     lineNumber, self.lastline)
             end
