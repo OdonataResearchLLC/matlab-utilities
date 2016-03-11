@@ -9,6 +9,8 @@ elseif fileName(1) == '*'
     % The fileName is a FilterSpec
     [ fname, fpath ] = uigetfile(fileName);
     fileName = fullfile(fpath,fname);
+else
+    fname = 1;
 end
 
 % Read the file
