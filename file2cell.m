@@ -1,4 +1,4 @@
-function fileC = file2cell( fileName )
+function [ fileC, fileName ] = file2cell( fileName )
 %file2cell Read a file and store each line as a column in a cell array.
 
 if nargin == 0
