@@ -16,9 +16,10 @@ classdef FortranIO < handle
             % Input validation
             ip = inputParser;
             ip.addParameter('WordSize', 'uint', @validWordSize);
+            ip.addParameter('FileID', 0, @isfloat)
             ip.parse(varargin{:});
             % Store the data
-            instance.fileID = 0;
+            instance.fileID = ip.Results.FileID;
             instance.wordsize = ip.Results.WordSize;
         end
         % Raw read function
@@ -35,7 +36,7 @@ classdef FortranIO < handle
             end
             
             % Suffix record length
-            endlen = fread(self.fileID,1,'uint');
+            endlen = fread(self.fileID,1,self.wordsize);
             if endlen ~= reclen
                 error('Suffix record length, %i, does not equal prefix, %i.', ...
                     endlen, reclen);
